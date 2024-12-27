@@ -37,18 +37,18 @@ pipeline {
         }
     }
 
-    post {
-        success {
-            slackSend(
-                color: 'good',
-                message: "Build Successful: ${env.JOB_NAME} #${env.BUILD_NUMBER}\n${env.BUILD_URL}"
-            )
-        }
-        failure {
-            slackSend(
-                color: 'danger',
-                message: "Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}\n${env.BUILD_URL}"
-            )
-        }
-    }
+    // post {
+    //     success {
+    //         slackSend(
+    //             color: 'good',
+    //             message: "Build Successful: ${env.JOB_NAME} #${env.BUILD_NUMBER}\n${env.BUILD_URL}"
+    //         )
+    //     }
+    //     failure {
+    //         slackSend(
+    //             color: 'danger',
+    //             message: "Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}\n${env.BUILD_URL}"
+    //         )
+    //     }
+    // }
 }
