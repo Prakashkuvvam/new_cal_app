@@ -1,0 +1,47 @@
+trigger:
+- main  # Trigger pipeline on the main branch (adjust as needed)
+
+pool:
+  vmImage: 'ubuntu-latest'  # Use an Ubuntu VM image (or change to 'windows-latest' if needed)
+
+variables:
+  mavenVersion: '3.6.3'  # Specify Maven version
+  jdkVersion: '11'       # Specify JDK version
+
+steps:
+
+# Checkout the code from the repository
+- task: Checkout@2
+  displayName: 'Checkout Code'
+
+# Install Maven tool
+- task: UseMaven@4
+  inputs:
+    mavenVersion: $(mavenVersion)
+  displayName: 'Use Maven $(mavenVersion)'
+
+# Set up JDK
+- task: UseJavaToolInstaller@1
+  inputs:
+    versionSpec: '$(jdkVersion)'
+  displayName: 'Set up JDK $(jdkVersion)'
+
+# Build the project
+- script: mvn clean compile
+  displayName: 'Build Project'
+
+# Run tests
+- script: mvn test
+  displayName: 'Run Tests'
+
+# Publish test results
+- task: PublishTestResults@2
+  inputs:
+    testResultsFiles: '**/target/surefire-reports/*.xml'
+    testRunTitle: 'Publish Test Results'
+    mergeTestResults: true
+  condition: succeededOrFailed()
+
+# Package the project
+- script: mvn package
+  displayName: 'Package Project'
